@@ -1,0 +1,31 @@
+# .github/workflows/python-ci.yml
+name: Python application CI # A name for your workflow
+
+on:
+  push:
+    branches: [ "main" ] # This workflow runs when you push to the 'main' branch
+  pull_request:
+    branches: [ "main" ] # This workflow runs for pull requests targeting 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # The type of machine to run the job on
+
+    steps:
+    - uses: actions/checkout@v4 # Action to check out your repository code
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v5 # Action to set up a Python environment
+      with:
+        python-version: "3.10"
+        cache: 'pip' # Cache pip dependencies
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 # Install flake8 linter
+        # if there's a requirements.txt, install those too
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Lint with flake8
+      run: |
+        # Run flake8 checks
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
