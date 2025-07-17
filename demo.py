@@ -1,6 +1,6 @@
 def my_function():
-    a,b = 1,2
+    a = 1
+    print(a)
 
-    return d
 
 my_function()
